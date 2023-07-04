@@ -23,7 +23,7 @@ bsize, psize = 512, 336
 num_workers = 8
 
 # model_name = "ViT-L/14@336px"
-model_name = "ViT-B/16"
+model_name = "ViT-B/32"
 df = pd.read_csv("/mnt/NVME2/geolibs/data/BigEarthNet-S2/vectors/random-split-6_2022_12_30-01_32_22/CSV/val.csv")
 df.head()
 def normalize(image):
