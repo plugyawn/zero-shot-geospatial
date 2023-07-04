@@ -333,23 +333,7 @@ model = transformers.LlamaForCausalLM.from_pretrained("decapoda-research/llama-7
 
 classes = []
 
-batch = tokenizer(
-    f"""
-    [park, desert]: "there is a park in the desert"
-    [parking lot, open space]: "there is a parking lot next to the open space"
-    [building, road {classes}]: ?
-    """,
-    return_tensors="pt", 
-    add_special_tokens=False
-)
 
-batch = {k: v.to(device) for k, v in batch.items()}
-
-
-generated = model.generate
-
-
-print(generated)
 
 zeroshot_weights = zeroshot_classifier(classes, context_templates)
 bens2_ds.vec_df.loc[0]["image"]
@@ -368,6 +352,57 @@ with torch.no_grad():
         preds = torch.sigmoid(logits)
 
         pdb.set_trace()
+
+        predicted_word_index = torch.argmax(preds, dim=1)
+        predicted_word = context_templates[predicted_word_index.item()]
+
+        print(predicted_word)
+
+        k = 5
+
+        topk_values, topk_indices = torch.topk(preds, k, dim=1)
+
+        topn_indices = topk_indices
+        topk_indices = topk_indices[:-1]
+
+        predicted_words = [context_templates[index.item()] for index in topk_indices[0]]
+
+        print(predicted_words)
+
+        classes = predicted_words.join(", ")
+
+        ############### EXPERIMENT 1: Join the words #####################
+
+        batch = tokenizer(
+            f"""
+            [park, desert]: "there is a park in the desert"
+            [parking lot, open space]: "there is a parking lot next to the open space"
+            [{classes}]: ?
+            """,
+            return_tensors="pt", 
+            add_special_tokens=False
+        )
+
+        batch = {k: v.to(device) for k, v in batch.items()}
+
+        generated = model.generate
+        
+        print(generated)
+
+        ##################### EXPERIMENT 2 ##############################
+        batch = tokenizer(
+            f"""
+            {classes}, what comes next?
+            """,
+            return_tensors="pt", 
+            add_special_tokens=False
+        )
+
+        batch = {k: v.to(device) for k, v in batch.items()}
+
+        generated = model.generate
+        
+        print(generated)
 
         acc_inf= acc_inst(preds, target)
 
