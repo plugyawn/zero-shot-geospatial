@@ -19,11 +19,17 @@ import pdb
 
 from tqdm import tqdm
 root_dir = "geolibs/data/BigEarthNet-S2"
-bsize, psize = 512, 336
+bsize, psize = 512, 224
 num_workers = 8
 
-model_name = "ViT-L/14@336px"
+models = {"L": ["ViT-L/14@336px", 336], "B": ["ViT-B/32", 224], "B16": ["ViT-B/16",224]}
+
+model_name, psize = models["B"]
+
+# model_name = "ViT-L/14@336px"
 # model_name = "ViT-B/32"
+
+# ViT-B takes 224 as patch-size and 
 df = pd.read_csv("/mnt/NVME2/geolibs/data/BigEarthNet-S2/vectors/random-split-6_2022_12_30-01_32_22/CSV/val.csv")
 df.head()
 def normalize(image):
@@ -395,6 +401,8 @@ with torch.no_grad():
             f"""
             {classes}, what comes next?
             """,
+            # Test with what else is there on the image?
+
             return_tensors="pt", 
             add_special_tokens=False
         )
@@ -408,6 +416,3 @@ with torch.no_grad():
         acc_inf= acc_inst(preds, target)
 
     avg_acc_inf = acc_inst.compute()
-    print(avg_acc_inf)
-preds[0]
-target[0]
