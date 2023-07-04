@@ -13,6 +13,7 @@ import rasterio as rio
 import transformers
 from PIL import Image
 import sentencepiece
+import pdb
 
 
 
@@ -325,19 +326,31 @@ with torch.no_grad():
     print(f"\nTop 15: {cls_tp15}")
     print(f"\nTop 20: {cls_tp20}")
 
-device = "cpu"  # replace "cpu" with "cuda" to use your GPU
+device = "cuda:0"  # replace "cpu" with "cuda" to use your GPU
 
 tokenizer = transformers.LlamaTokenizer.from_pretrained("decapoda-research/llama-7b-hf")
 model = transformers.LlamaForCausalLM.from_pretrained("decapoda-research/llama-7b-hf").to(device)
 
+classes = []
+
 batch = tokenizer(
-    "The capital of Canada is",
+    f"""
+    [park, desert]: "there is a park in the desert"
+    [parking lot, open space]: "there is a parking lot next to the open space"
+    [building, road {classes}]: ?
+    """,
     return_tensors="pt", 
     add_special_tokens=False
 )
 
 batch = {k: v.to(device) for k, v in batch.items()}
+
+
 generated = model.generate
+
+
+print(generated)
+
 zeroshot_weights = zeroshot_classifier(classes, context_templates)
 bens2_ds.vec_df.loc[0]["image"]
 
@@ -353,6 +366,8 @@ with torch.no_grad():
         im_features /= im_features.norm(dim=-1, keepdim=True)
         logits = 1.* im_features @ zeroshot_weights
         preds = torch.sigmoid(logits)
+
+        pdb.set_trace()
 
         acc_inf= acc_inst(preds, target)
 
