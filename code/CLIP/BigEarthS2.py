@@ -75,7 +75,7 @@ class BigEarthNetS2InferenceDataset(Dataset):
 
         return smpl_map
                     
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = "cuda:1" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load(model_name, device=device)
 device
 templates = [
