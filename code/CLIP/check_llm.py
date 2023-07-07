@@ -24,7 +24,7 @@ from tqdm import tqdm
 device = "cuda:0"  # replace "cpu" with "cuda" to use your GPU
 
 tokenizer = transformers.LlamaTokenizer.from_pretrained("decapoda-research/llama-7b-hf-int4")
-model = transformers.LlamaForCausalLM.from_pretrained("decapoda-research/llama-7b-hf-int4").to(device)
+model = transformers.LlamaForCausalLM.from_pretrained("decapoda-research/llama-7b-hf-int4").to(device, dtype=torch.float16)
 
 classes = ["park", "desert", "parking lot", "open space"]
 
