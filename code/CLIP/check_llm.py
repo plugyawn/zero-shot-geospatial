@@ -30,7 +30,7 @@ classes = ["park", "desert", "parking lot", "open space"]
 
 
 batch = tokenizer(
-initial_sentence = f"""
+text = f"""
 I went to a book shop and got myself a...
 """,
 return_tensors="pt", 
