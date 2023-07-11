@@ -41,7 +41,7 @@ add_special_tokens=False
 
 batch = {k: v.to(device) for k, v in batch.items()}
 
-generated = model.generate
+generated = model.generate()
 
 print(generated)
 
