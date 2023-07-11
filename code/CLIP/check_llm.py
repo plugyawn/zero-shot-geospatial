@@ -40,11 +40,17 @@ add_special_tokens=False
 )
 
 batch = {k: v.to(device) for k, v in batch.items()}
+# Generate output from the model
+output = model.generate(
+    input_ids=batch['input_ids'],
+    attention_mask=batch['attention_mask'],
+    max_length=50,  # you can adjust this as needed
+)
 
-generated = model.generate()
+# Decode the output to text
+generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
 
-print(generated)
-
+print(generated_text)
 
 
 # Code translated from download.sh
