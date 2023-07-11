@@ -31,9 +31,7 @@ classes = ["park", "desert", "parking lot", "open space"]
 
 batch = tokenizer(
 f"""
-[park, desert]: "there is a park in the desert"
-[parking lot, open space]: "there is a parking lot next to the open space"
-[{classes}]: ?
+{classes}, and next to them is 
 """,
 return_tensors="pt", 
 add_special_tokens=False
