@@ -30,8 +30,8 @@ classes = ["park", "desert", "parking lot", "open space"]
 
 
 batch = tokenizer(
-f"""
-{classes}, and next to them is 
+initial_sentence = f"""
+I went to a book shop and got myself a...
 """,
 return_tensors="pt", 
 add_special_tokens=False
@@ -42,8 +42,7 @@ batch = {k: v.to(device) for k, v in batch.items()}
 output = model.generate(
     input_ids=batch['input_ids'],
     attention_mask=batch['attention_mask'],
-    max_length=260,  # you can adjust this as needed
-    max_new_tokens = 200
+    max_new_tokens = 20,
 )
 
 # Decode the output to text
