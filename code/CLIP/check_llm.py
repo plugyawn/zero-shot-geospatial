@@ -24,7 +24,7 @@ from tqdm import tqdm
 device = "cuda:0"  # replace "cpu" with "cuda" to use your GPU
 
 tokenizer = transformers.LlamaTokenizerFast.from_pretrained("hf-internal-testing/llama-tokenizer")
-model = transformers.LlamaForCausalLM.from_pretrained("decapoda-research/llama-7b-hf",  low_cpu_mem_usage=True).to(device, dtype=torch.float16)
+model = transformers.LlamaForCausalLM.from_pretrained("decapoda-research/llama-7b-hf").to(device, dtype=torch.float16)
 
 classes = ["park", "desert", "parking lot", "open space"]
 
@@ -44,3 +44,13 @@ batch = {k: v.to(device) for k, v in batch.items()}
 generated = model.generate
 
 print(generated)
+
+
+
+# Code translated from download.sh
+PRESIGNED_URL="" # replace with presigned url from email
+TARGET_FOLDER="./model/vi"
+model_sizes = ["7B"]
+N_SHARD_DICT = {
+    "7B": 0
+}
