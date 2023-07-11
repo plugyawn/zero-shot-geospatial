@@ -44,7 +44,8 @@ batch = {k: v.to(device) for k, v in batch.items()}
 output = model.generate(
     input_ids=batch['input_ids'],
     attention_mask=batch['attention_mask'],
-    max_length=50,  # you can adjust this as needed
+    max_length=260,  # you can adjust this as needed
+    max_new_tokens = 200
 )
 
 # Decode the output to text
